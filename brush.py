@@ -162,7 +162,7 @@ while True:
             mode = "no"
             roun = 1
             place_order(symbol=bx_symbol, price=bx_price, action="Close", volume=amt, side="Ask", tradeType="Market")
-            print("close short :", bx_price)
+            print("close long  :", bx_price)
             print("-------------------------------")
             balance = json.loads(get_balance().decode('utf-8'))['data']['account']['balance']
             set_leverage(symbol=bx_symbol, leverage=int(150/balance*20))
@@ -211,7 +211,7 @@ while True:
         if roun == 3 and mode == "no":
             mode = "long"
             place_order(symbol=bx_symbol, price=bx_price, action="Close", volume=amt, side="Bid", tradeType="Market")
-            print("close long  :", bx_price)
+            print("close short :", bx_price)
             roun += 1
         
     if bx_price > bn_price*(1+rate/100):
@@ -224,5 +224,5 @@ while True:
         if roun == 3 and mode == "no":
             mode = "short"
             place_order(symbol=bx_symbol, price=bx_price, action="Close", volume=amt, side="Ask", tradeType="Market")
-            print("close short :", bx_price)
+            print("close long  :", bx_price)
             roun += 1
