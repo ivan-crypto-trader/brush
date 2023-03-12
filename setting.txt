@@ -1,5 +1,5 @@
 APIKEY     : gchcQ4YeQcRnEYK1QCCMZGTbjiwCSyIGD0QB9n0qv0wcqXyhXUpZUOw0QumfAgjfagDylL0TPUBQS7A3VP49A
 SECRETKEY  : vmbCDIOKl5STZaLh9quddm24hptacBX3JgqROaBYIVJpARGFaAAtqT9QwJyV3ajTMDbqnaFyoFvp57yx5jA
 coin       : ltc
-rate       : 0.15
+rate       : 0.2
 mode (f/s) : f
