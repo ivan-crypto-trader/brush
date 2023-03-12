@@ -1,5 +1,5 @@
 APIKEY     : PbipS9gafC1Fs2sPCgHXNRDL6izPUeUR7jfb6J3t7RAUPJxiFehN8erCrOJB61i7rv5ZG2VxXJR4dlJoA
 SECRETKEY  : SJPbLUcSBr5GBUQGV6ojW4Vv8QTm647JgNGmQDK0zR5piG18fbRpYMnfrzjpxvOx8LWZ03LAkUUsxuSgdcXVSA
-coin       : lqty
-rate       : 0.25
-mode (f/s) : s
+coin       : agix
+rate       : 0.2
+mode (f/s) : f
