@@ -187,6 +187,7 @@ while True:
                 print("======================================")
                 print("open long   :", bx_price)
             else:
+                balance = get_balance()["data"]["account"]["balance"]
                 amt = balance*get_leverage(symbol=bx_symbol)["data"]["longLeverage"]*0.9/bx_price
                 print("error")
 
@@ -196,6 +197,7 @@ while True:
                 print("======================================")
                 print("open short  :", bx_price)
             else:
+                balance = get_balance()["data"]["account"]["balance"]
                 amt = balance*get_leverage(symbol=bx_symbol)["data"]["longLeverage"]*0.9/bx_price
                 print("error")
     except:
