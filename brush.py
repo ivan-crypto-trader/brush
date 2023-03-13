@@ -27,8 +27,7 @@ APIURL = "https://api-swap-rest.bingbon.pro"
 APIKEY = setting[0].split()[-1]
 SECRETKEY = setting[1].split()[-1]
 
-
-coin = setting[2].split()[-1]
+coin = setting[2].split()[-1].upper()
 bx_symbol = coin+"-USDT"
 bn_symbol = coin+"USDT"
 
@@ -58,7 +57,7 @@ if True: #setting
 
     def post(url, body):
         req = urllib.request.Request(url, data=body.encode("utf-8"), headers={'User-Agent': 'Mozilla/5.0'})
-        return urllib.request.urlopen(req).read()
+        return json.loads(urllib.request.urlopen(req).read().decode("UTF-8").replace("'", '"'))
 
     def get_balance():
         paramsMap = {
@@ -128,10 +127,10 @@ if True: #setting
         url = "%s/api/v1/user/getLeverage" % APIURL
         return post(url, paramsStr)
 
-balance = json.loads(get_balance().decode("UTF-8"))["data"]["account"]["balance"]
+balance = get_balance()["data"]["account"]["balance"]
 
 def print_info():
-    os.system("clear")
+    os.system("cls")
     print("--------------------------------------")
     print("coin       :", coin)
     print("rate       :", rate)
@@ -145,59 +144,60 @@ if setting[4].split()[-1] == "f":
     bx_price = float(bx.title.split(" ")[0][1:])
     bn.get('https://www.binance.com/zh-TC/futures/'+coin+'USDT')
     print_info()
-    amt = balance*json.loads(get_leverage(symbol=bx_symbol).decode("UTF-8"))["data"]["longLeverage"]*0.9/bx_price
+    amt = balance*get_leverage(symbol=bx_symbol)["data"]["longLeverage"]*0.9/bx_price
     
 elif setting[4].split()[-1] == "s":
     bx_price = float(bx.title.split(" ")[0][1:])
     bn.get('https://www.binance.com/zh-TC/trade/'+coin+'_USDT')
     print_info()
-    amt = balance*json.loads(get_leverage(symbol=bx_symbol).decode("UTF-8"))["data"]["longLeverage"]*0.9/bx_price
+    amt = balance*get_leverage(symbol=bx_symbol)["data"]["longLeverage"]*0.9/bx_price
         
 else:
     print("price mode error !")
     exit()
 
+           
 while True:
-    bn_price = float(bn.title.split()[0])
-    bx_price = float(bx.title.split(" ")[0][1:])
+    try:
+        bn_price = float(bn.title.split()[0])
+        bx_price = float(bx.title.split(" ")[0][1:])
+        if bn_price < bx_price and mode == "long":
 
-    if bn_price < bx_price and mode == "long":
-        if json.loads(place_order(symbol=bx_symbol, price=bx_price, action="Close", volume=amt, side="Ask", tradeType="Market").decode("UTF-8"))["code"] == 0:
-            mode = "no"
-            print("close long  :", bx_price)
-            balance = json.loads(get_balance().decode("UTF-8"))["data"]["account"]["balance"]
-            print("--------------------------------------")
-            print("balance     :", balance)
-            print("======================================")
-            amt = balance*json.loads(get_leverage(symbol=bx_symbol).decode("UTF-8"))["data"]["longLeverage"]*0.9/bx_price
+            if place_order(symbol=bx_symbol, price=bx_price, action="Close", volume=amt, side="Ask", tradeType="Market")["code"] == 0:
+                mode = "no"
+                print("close long  :", bx_price)
+                balance = get_balance()["data"]["account"]["balance"]
+                print("--------------------------------------")
+                print("balance     :", balance)
+                amt = balance*get_leverage(symbol=bx_symbol).decode("UTF-8")["data"]["longLeverage"]*0.9/bx_price
 
-    if bx_price < bn_price and mode == "short":
-        if json.loads(place_order(symbol=bx_symbol, price=bx_price, action="Close", volume=amt, side="Bid", tradeType="Market").decode("UTF-8"))["code"] == 0:
-            mode = "no"
-            print("close short :", bx_price)
-            balance = json.loads(get_balance().decode("UTF-8"))["data"]["account"]["balance"]
-            print("--------------------------------------")
-            print("balance     :", balance)
-            print("======================================")
-            amt = balance*json.loads(get_leverage(symbol=bx_symbol).decode("UTF-8"))["data"]["longLeverage"]*0.9/bx_price
+        if bx_price < bn_price and mode == "short":
+            if place_order(symbol=bx_symbol, price=bx_price, action="Close", volume=amt, side="Bid", tradeType="Market")["code"] == 0:
+                mode = "no"
+                print("close short :", bx_price)
+                balance = get_balance()["data"]["account"]["balance"]
+                print("--------------------------------------")
+                print("balance     :", balance)
+                amt = balance*get_leverage(symbol=bx_symbol)["data"]["longLeverage"]*0.9/bx_price
 
 
-    if bn_price > bx_price*(1+rate/100) and mode == "no":
-        if json.loads(place_order(symbol=bx_symbol, price=bx_price, action="Open", volume=amt, side="Bid", tradeType="Market").decode("UTF-8"))["code"] == 0:
-            mode = "long"
-            print("======================================")
-            print("open long   :", bx_price)
-        else:
-            amt = balance*json.loads(get_leverage(symbol=bx_symbol).decode("UTF-8"))["data"]["longLeverage"]*0.9/bx_price
-            print("error")
+        if bn_price > bx_price*(1+rate/100) and mode == "no":
+            if place_order(symbol=bx_symbol, price=bx_price, action="Open", volume=amt, side="Bid", tradeType="Market")["code"] == 0:
+                mode = "long"
+                print("======================================")
+                print("open long   :", bx_price)
+            else:
+                amt = balance*get_leverage(symbol=bx_symbol)["data"]["longLeverage"]*0.9/bx_price
+                print("error")
 
-    if bx_price > bn_price*(1+rate/100) and mode == "no":
-        if json.loads(place_order(symbol=bx_symbol, price=bx_price, action="Open", volume=amt, side="Ask", tradeType="Market").decode("UTF-8"))["code"] == 0:
-            mode = "short"
-            print("======================================")
-            print("open short  :", bx_price)
-        else:
-            amt = balance*json.loads(get_leverage(symbol=bx_symbol).decode("UTF-8"))["data"]["longLeverage"]*0.9/bx_price
-            print("error")
-
+        if bx_price > bn_price*(1+rate/100) and mode == "no":
+            if place_order(symbol=bx_symbol, price=bx_price, action="Open", volume=amt, side="Ask", tradeType="Market")["code"] == 0:
+                mode = "short"
+                print("======================================")
+                print("open short  :", bx_price)
+            else:
+                amt = balance*get_leverage(symbol=bx_symbol)["data"]["longLeverage"]*0.9/bx_price
+                print("error")
+    except:
+        pass
 
