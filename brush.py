@@ -137,9 +137,9 @@ def print_info():
     print("price mode :", setting[4].split()[-1])
     print("balance    :", balance)
     print("--------------------------------------")
-    time.sleep(10)
+    time.sleep(3)
 
-time.sleep(10)
+time.sleep(3)
 if setting[4].split()[-1] == "f":
     bx_price = float(bx.title.split(" ")[0][1:])
     bn.get('https://www.binance.com/zh-TC/futures/'+coin+'USDT')
