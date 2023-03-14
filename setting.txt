@@ -2,4 +2,4 @@ APIKEY     : 8hgVLqR8KvKpcQ5U9vBaUqqshD2GSJW82lToR9BGPft2Lvu5eRC4TifqsP2HVJmLyRq
 SECRETKEY  : KOFDtwMNLrtEEXJBR9Cx4CA8hmwK9ozt4PSJGrSye69ITDkNsKaUUx2UlvQ7VysNXrg93hz6UJzmpKIl9jiQ
 coin       : lqty
 rate       : 0.25
-mode (f/s) : 
+mode (f/s) : s
